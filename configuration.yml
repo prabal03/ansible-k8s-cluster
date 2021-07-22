@@ -1,0 +1,10 @@
+- hosts: master
+  roles:
+       - master
+- hosts: worker
+  roles:
+      - worker
+- hosts: master
+  roles:
+     - multi-tier
+

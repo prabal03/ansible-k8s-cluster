@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: "deploymentmysql"
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+             name: "mysql"
+    template:
+           metadata: 
+               name: "mysqlpod"
+               labels:
+                   name: mysql
+                   prod: team1
+           spec:
+             containers:
+             - name: "mysqlcont"
+               image: mysql:5.7
+               env:
+               - name: "MYSQL_ROOT_PASSWORD"
+                 value: prabal
+               - name: "MYSQL_DATABASE"
+                 value: sql
+               - name: "MYSQL_USER"
+                 value: wordpress
+               - name: "MYSQL_PASSWORD"
+                 value: mysql
+                       
+                         
+                                     
+
+

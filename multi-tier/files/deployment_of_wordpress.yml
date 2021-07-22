@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+        name: "deploymentofwordpress"
+spec: 
+    replicas: 2
+    selector:
+            matchLabels:
+                  name: "wordpress"
+    template:
+            metadata:
+                    name: "wordpress"
+                    labels:
+                         name: wordpress
+                       
+            spec:   
+               containers:
+               - name: "wordpresscont"
+                 image: "wordpress:5.1.1"
+
+

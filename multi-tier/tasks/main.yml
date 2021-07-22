@@ -1,0 +1,12 @@
+---
+# tasks file for multi-tier
+- name: "copying neccessary files to master for setting up wordpress and mysql"
+  copy:
+     dest: /root
+     src: "{{ item }}"
+  loop: "{{ x }}"
+- name: "connecting wordpress with mysql database"     
+  shell: kubectl apply -f "{{ item }}"
+  args:
+     chdir: /root
+  loop: "{{ x }}"

@@ -1,0 +1,43 @@
+---
+# tasks file for worker
+- name: "--creating the kubernetes repo--"
+  copy:
+        dest: /etc/yum.repos.d/
+        src: kubernetes.repo
+- name: "--editing the network policy--"
+  copy:
+       dest: /etc/sysctl.d/k8s.conf
+       content: |
+              net.bridge.bridge-nf-call-ip6tables = 1
+              net.bridge.bridge-nf-call-iptables = 1
+- name: "--updating the network policy--"
+  command: sysctl --system
+- name: "--Inastalling packages--"
+  package:
+            name:
+                - docker
+                - kubeadm
+                - iproute-tc
+            state: present
+- name: "--changing the configuration of docker--"
+  copy:
+       dest: /etc/docker/daemon.json
+       content: |
+                 {
+                    "exec-opts":["native.cgroupdriver=systemd"]
+                  }
+
+- name: "--starting the service of docker and kubelet--"
+  service:
+          name: "{{ item }}"
+          state: started
+          enabled: yes
+  loop:
+        - docker
+        - kubelet
+- name: "--connecting worker with master node--"
+  command: "{{ hostvars[groups['master'][0]]['token']['stdout'] }}"
+- debug:
+      msg: "****Cluster has been formed****"
+
+

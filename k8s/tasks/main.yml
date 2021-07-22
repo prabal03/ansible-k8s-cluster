@@ -1,0 +1,36 @@
+# tasks file for k8s
+- name: "launching master in aws"
+  ec2:
+       aws_access_key: "{{ access_key }}"
+       aws_secret_key: "{{ secret_key }}"
+       instance_tags:
+               Name: "{{ item }}"
+       group_id: "{{ group_id }}"
+       image:  "{{ ami }}"
+       instance_type: "{{ type }}"
+       key_name: "{{ key }}"
+       region: "{{ region }}"
+       vpc_subnet_id: "{{ subnet_id }}"
+       assign_public_ip: yes
+       wait: yes
+       wait_timeout: 50
+  register: x
+  loop:
+        - master
+        - workernode1
+        - workernode2
+- name: "creating inventory file for master"
+  blockinfile:
+            create: yes
+            path: ./inventory/masterinventory
+            block: |
+                    [master]
+                    {{ x.results[0].instances[0].public_ip }}
+- name: "creating inventory file for worker"
+  blockinfile:
+      create: yes
+      path: ./inventory/workerinventory
+      block: |
+             [worker]
+             {{ x.results[1].instances[0].public_ip }}
+             {{ x.results[2].instances[0].public_ip }}

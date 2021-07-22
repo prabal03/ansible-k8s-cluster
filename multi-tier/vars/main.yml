@@ -1,0 +1,7 @@
+---
+# vars file for multi-tier
+x:
+  - deployment_of_mysql.yml
+  - cluster.yml
+  - deployment_of_wordpress.yml
+  - nodeport.yml
